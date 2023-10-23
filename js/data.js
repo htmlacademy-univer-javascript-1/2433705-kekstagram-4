@@ -1,4 +1,5 @@
-import { getRandomNumber } from './functions.js';
+import{generateUniqueID} from './util.js';
+import { getRandomNumber } from './util.js';
 
 function generateRandomComment(){
   const commentsList = [
@@ -17,15 +18,16 @@ function generateRandomComment(){
   };
 }
 
-const usedIDs = new Set();
-
-function generateUniqueID() {
-  let id;
-  do {
-    id = getRandomNumber(1, 1000);
-  } while (usedIDs.has(id));
-  usedIDs.add(id);
-  return id;
+function generatePhoto(id){
+  return{
+    id,
+    url: `photos/${id}.jpg`,
+    description: `Описание фото №${id}`,
+    likes: getRandomNumber(15, 200),
+    comments: Array.from({length: getRandomNumber(0,30)}, generateRandomComment)
+  };
 }
 
-export{generateRandomComment};
+const photos = Array.from({length : 25}, (_, index) => generatePhoto(index+1));
+
+
