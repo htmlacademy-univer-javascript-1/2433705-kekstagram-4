@@ -1,4 +1,4 @@
-import './generate-comment.js';
-import './generate-photos.js';
+import './data.js';
+import './util.js';
 
 
