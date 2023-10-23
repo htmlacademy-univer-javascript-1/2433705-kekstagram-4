@@ -39,12 +39,23 @@ function checkNumber(string){                                  // 3 задача
 checkNumber('2023 год');
 checkNumber(('а я томат'));
 
-const getRandomNumber = (a, b) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-  const result = Math.random() * (upper - lower + 1) + lower;
-  return Math.floor(result);
-};
+function isCorrectMeeting(startDay, endDay, startMeeting, duration){
+  const [startHour, startMinute] = splitTime(startDay);
+  const [endHour, endMinute] = splitTime(endDay);
+  const [meetingStartHour, meetingStartMinute] = splitTime(startMeeting);
+  const meetingEndHour =  Math.floor(meetingStartHour + duration / 60);
+  const meetingEndMinute = (meetingStartMinute + duration) % 60;
+  if(meetingStartHour < startHour ||
+    (meetingStartHour === startHour && meetingStartMinute < startMinute) ||
+      meetingEndHour > endHour ||
+      (meetingEndHour === endHour && meetingEndMinute > endMinute)
+  ){
+    return false;
+  }
+  return true;
+}
 
-export{getRandomNumber};
-
+function splitTime(time) {
+  const [hours, minutes] = time.split(':').map(Number);
+  return [hours, minutes];
+}
