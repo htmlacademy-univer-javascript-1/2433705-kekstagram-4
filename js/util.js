@@ -1,4 +1,3 @@
-
 export{generateUniqueID};
 
 const getRandomNumber = (a, b) => {
@@ -19,5 +18,3 @@ function generateUniqueID() {
   usedIDs.add(id);
   return id;
 }
-
-

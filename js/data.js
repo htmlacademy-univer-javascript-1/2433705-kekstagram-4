@@ -30,4 +30,3 @@ function generatePhoto(id){
 
 const photos = Array.from({length : 25}, (_, index) => generatePhoto(index+1));
 
-
