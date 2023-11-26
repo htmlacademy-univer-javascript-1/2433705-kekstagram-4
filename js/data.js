@@ -1,6 +1,5 @@
 import{generateUniqueID} from './util.js';
 import { getRandomNumber } from './util.js';
-import {PhotoGallery} from './draw.js';
 
 function generateRandomComment(){
   const commentsList = [
@@ -29,6 +28,6 @@ function generatePhoto(id){
   };
 }
 
-const photos = Array.from({length : 25}, (_, index) => generatePhoto(index+1));
-PhotoGallery.renderPhotos(photos);
+export{generatePhoto};
+
 

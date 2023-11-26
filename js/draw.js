@@ -1,4 +1,5 @@
-
+import { generatePhoto } from './data.js';
+import { showBigPicture, closeBigPicture } from './big-picture.js';
 
 const PhotoGallery = (function () {
   function createPhotoElement(photoData) {
@@ -13,6 +14,25 @@ const PhotoGallery = (function () {
     comments.textContent = photoData.comments.length;
     return photoElement;
   }
+  function addEventListeners(photosData) {
+    const pictures = document.querySelectorAll('.picture');
+
+    pictures.forEach((picture, index) => {
+      picture.addEventListener('click', () => {
+        showBigPicture(photosData[index]);
+      });
+    });
+
+    const closeBtn = document.querySelector('.big-picture__cancel');
+    closeBtn.addEventListener('click', closeBigPicture);
+
+    document.addEventListener('keydown', (evt) => {
+      if (evt.key === 'Escape') {
+        closeBigPicture();
+      }
+    });
+  }
+
   function renderPhotos(photosData) {
     const fragment = document.createDocumentFragment();
     const picturesContainer = document.querySelector('.pictures');
@@ -21,10 +41,14 @@ const PhotoGallery = (function () {
       fragment.appendChild(photoElement);
     });
     picturesContainer.appendChild(fragment);
+    addEventListeners(photosData);
   }
   return{
     renderPhotos
   };
+
 })();
 
-export{PhotoGallery};
+const photos = Array.from({length : 25}, (_, index) => generatePhoto(index+1));
+PhotoGallery.renderPhotos(photos);
+
