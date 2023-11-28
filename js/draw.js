@@ -14,25 +14,34 @@ const PhotoGallery = (function () {
     comments.textContent = photoData.comments.length;
     return photoElement;
   }
-  function addEventListeners(photosData) {
+  function removeEventListeners(photosData) {
     const pictures = document.querySelectorAll('.picture');
-
+    pictures.forEach((picture, index) => {
+      picture.removeEventListener('click', () => {
+        showBigPicture(photosData[index]);
+      });
+    });
+    const closeBtn = document.querySelector('.big-picture__cancel');
+    closeBtn.removeEventListener('click', closeBigPicture);
+    document.removeEventListener('keydown', keyDownHandler);
+  }
+  function addEventListeners(photosData) {
+    removeEventListeners(); // Удаляем предыдущие обработчики перед назначением новых
+    const pictures = document.querySelectorAll('.picture');
     pictures.forEach((picture, index) => {
       picture.addEventListener('click', () => {
         showBigPicture(photosData[index]);
       });
     });
-
     const closeBtn = document.querySelector('.big-picture__cancel');
     closeBtn.addEventListener('click', closeBigPicture);
-
-    document.addEventListener('keydown', (evt) => {
-      if (evt.key === 'Escape') {
-        closeBigPicture();
-      }
-    });
+    document.addEventListener('keydown', keyDownHandler);
   }
-
+  function keyDownHandler(evt) {
+    if (evt.key === 'Escape') {
+      closeBigPicture();
+    }
+  }
   function renderPhotos(photosData) {
     const fragment = document.createDocumentFragment();
     const picturesContainer = document.querySelector('.pictures');
