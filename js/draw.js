@@ -14,19 +14,7 @@ const PhotoGallery = (function () {
     comments.textContent = photoData.comments.length;
     return photoElement;
   }
-  function removeEventListeners(photosData) {
-    const pictures = document.querySelectorAll('.picture');
-    pictures.forEach((picture, index) => {
-      picture.removeEventListener('click', () => {
-        showBigPicture(photosData[index]);
-      });
-    });
-    const closeBtn = document.querySelector('.big-picture__cancel');
-    closeBtn.removeEventListener('click', closeBigPicture);
-    document.removeEventListener('keydown', keyDownHandler);
-  }
   function addEventListeners(photosData) {
-    removeEventListeners(); // Удаляем предыдущие обработчики перед назначением новых
     const pictures = document.querySelectorAll('.picture');
     pictures.forEach((picture, index) => {
       picture.addEventListener('click', () => {
@@ -55,7 +43,6 @@ const PhotoGallery = (function () {
   return{
     renderPhotos
   };
-
 })();
 
 const photos = Array.from({length : 25}, (_, index) => generatePhoto(index+1));

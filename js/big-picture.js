@@ -1,3 +1,4 @@
+
 function showBigPicture(photoData) {
   const bigPicture = document.querySelector('.big-picture');
   const bigImage = bigPicture.querySelector('.big-picture__img img');
@@ -49,12 +50,12 @@ function showBigPicture(photoData) {
     // Если все комментарии показаны, скрываем кнопку "Загрузить ещё"
     if (shownCommentsCount >= photoData.comments.length) {
       commentsLoaderBlock.classList.add('hidden');
+      shownCommentsCount=comments.length;
     }
   };
   // Показываем первые комментарии (первые 5)
   renderComments();
   // Обработчик события для кнопки "Загрузить ещё"
-  commentsLoaderBlock.removeEventListener('click', renderComments);
   commentsLoaderBlock.addEventListener('click', renderComments);
   // Открытие окна
   bigPicture.classList.remove('hidden');
