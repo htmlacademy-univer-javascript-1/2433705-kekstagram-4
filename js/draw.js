@@ -1,5 +1,7 @@
 import { generatePhoto } from './data.js';
-import { showBigPicture, closeBigPicture } from './big-picture.js';
+import createShowBigPicture from './big-picture.js';
+
+const { showBigPicture, closeBigPicture } = createShowBigPicture();
 
 const PhotoGallery = (function () {
   function createPhotoElement(photoData) {
@@ -14,22 +16,27 @@ const PhotoGallery = (function () {
     comments.textContent = photoData.comments.length;
     return photoElement;
   }
+
   function addEventListeners(photosData) {
     const pictures = document.querySelectorAll('.picture');
     pictures.forEach((picture, index) => {
-      picture.addEventListener('click', () => {
+      picture.addEventListener('click', (evt) => {
+        evt.preventDefault();
         showBigPicture(photosData[index]);
       });
     });
     const closeBtn = document.querySelector('.big-picture__cancel');
+    closeBtn.removeEventListener('click', closeBigPicture);
     closeBtn.addEventListener('click', closeBigPicture);
-    document.addEventListener('keydown', keyDownHandler);
+    document.addEventListener('keydown', closeOnEscape);
   }
-  function keyDownHandler(evt) {
+
+  function closeOnEscape(evt) {
     if (evt.key === 'Escape') {
       closeBigPicture();
     }
   }
+
   function renderPhotos(photosData) {
     const fragment = document.createDocumentFragment();
     const picturesContainer = document.querySelector('.pictures');
@@ -40,11 +47,11 @@ const PhotoGallery = (function () {
     picturesContainer.appendChild(fragment);
     addEventListeners(photosData);
   }
-  return{
-    renderPhotos
+
+  return {
+    renderPhotos,
   };
 })();
 
-const photos = Array.from({length : 25}, (_, index) => generatePhoto(index+1));
+const photos = Array.from({ length: 25 }, (_, index) => generatePhoto(index + 1));
 PhotoGallery.renderPhotos(photos);
-
