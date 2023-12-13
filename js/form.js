@@ -1,70 +1,124 @@
-const uploadFileInput = document.querySelector('#upload-file');
-const imgUploadOverlay = document.querySelector('.img-upload__overlay');
-const imgUploadCancel = document.querySelector('#upload-cancel');
-const imgUploadForm = document.querySelector('.img-upload__form');
-const imgPreview = document.querySelector('.img-upload__preview img');
-const effectLevelSlider = document.querySelector('.effect-level__slider');
-const scaleControlSmaller = document.querySelector('.scale__control--smaller');
-const scaleControlBigger = document.querySelector('.scale__control--bigger');
-const textHashtags = document.querySelector('.text__hashtags');
-const textDescription = document.querySelector('.text__description');
 
-// Функция обработки события изменения значения поля загрузки файла
-uploadFileInput.addEventListener('change', () => {
-  const file = uploadFileInput.files[0]; // Получаем файл
+const form = document.querySelector('.img-upload__form');
+const uploadInput = form.querySelector('#upload-file');
+const overlay = form.querySelector('.img-upload__overlay');
+const cancelBtn = form.querySelector('#upload-cancel');
+const imgPreview = form.querySelector('.img-upload__preview img');
+const hashtags = form.querySelector('.text__hashtags');
+const description = form.querySelector('.text__description');
+let preventClose = false;
+let selectedEffect = 'none';
+const MAX_LENGTH = 140;
+const MAX_HASHTAG_COUNT = 5;
+const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
+const textErrors = {
+  INVALID_COUNT: `Максимум ${MAX_HASHTAG_COUNT} хештегов`,
+  INVALID_TAG: 'Неправильный хештег',
+  REPEATING_TAG: 'Повторяющийся хештег'
+};
+const pristine = new Pristine(form,{
+  classTo: 'img-upload__field-wrapper',
+  errorTextParent: 'img-upload__field-wrapper',
+});
 
-  // Проверяем, был ли выбран файл
+const normalizeTags = (tagString)=> tagString
+  .trim().split(' ')
+  .filter((tag)=> Boolean(tag.length));
+
+const hasValidCount = (value) => normalizeTags(value).length <= MAX_HASHTAG_COUNT;
+
+const hasValidTags = (value) => normalizeTags(value).every((tag) => VALID_SYMBOLS.test(tag));
+
+function hasRepeatingTags(value) {
+  const tags = normalizeTags(value);
+  const uniqueTags = new Set(tags);
+  return tags.length === uniqueTags.size;
+}
+
+uploadInput.addEventListener('change', () => {
+  const file = uploadInput.files[0];
+
   if (file) {
-    imgPreview.src = URL.createObjectURL(file); // Подставляем выбранное изображение в превью
-    imgUploadOverlay.classList.remove('hidden'); // Показываем форму редактирования изображения
+    imgPreview.src = URL.createObjectURL(file);
+    overlay.classList.remove('hidden');
     document.body.classList.add('modal-open');
+    selectedEffect = 'none';
+    applySelectedEffect();
   }
 });
 
-// Функция закрытия формы редактирования изображения
+function applySelectedEffect() {
+  imgPreview.className = '';
+  imgPreview.classList.add(`effects__preview--${selectedEffect}`);
+}
+
+function handleFocus(element) {
+  element.addEventListener('focus', () => {
+    preventClose = true;
+  });
+
+  element.addEventListener('blur', () => {
+    preventClose = false;
+  });
+}
+
+handleFocus(hashtags);
+handleFocus(description);
+
 function closeImgUploadOverlay() {
-  imgUploadForm.reset();
-  imgUploadOverlay.classList.add('hidden');
+  form.reset();
+  pristine.reset();
+  overlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
 }
 
-imgUploadCancel.addEventListener('click', closeImgUploadOverlay);
+cancelBtn.addEventListener('click', closeImgUploadOverlay);
 
-// Обработчик нажатия клавиши Esc
 document.addEventListener('keydown', (evt) => {
-  if (evt.key === 'Escape') {
+  if (evt.key === 'Escape' && !preventClose){
     closeImgUploadOverlay();
   }
 });
 
-// Обработчики изменения масштаба
-scaleControlSmaller.addEventListener('click', () => {
-  // Уменьшение масштаба
-  // Ваш код для изменения масштаба изображения
-});
-
-scaleControlBigger.addEventListener('click', () => {
-  // Увеличение масштаба
-  // Ваш код для изменения масштаба изображения
-});
-
 const effectsList = document.querySelector('.effects__list');
 effectsList.addEventListener('change', (evt) => {
-  const selectedEffect = evt.target.value;
-
-  // Удаляем все классы эффектов
-  imgPreview.className = '';
-  imgPreview.classList.add(`effects__preview--${  selectedEffect}`);
+  selectedEffect = evt.target.value;
+  applySelectedEffect();
 });
 
-// Обработчик изменения глубины эффекта
-effectLevelSlider.addEventListener('change', () => {
-  // Изменение глубины эффекта
-  // Ваш код для изменения глубины эффекта
-});
+function limitInputLength(inputField, maxLen) {
+  inputField.addEventListener('input', (event) => {
+    const { value } = event.target;
 
-// Обработчик отправки формы
-imgUploadForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  // Ваш код для обработки отправки формы
-});
+    if (value.length > maxLen) {
+      pristine.validate();
+      event.target.value = value.slice(0, maxLen);
+    }
+  });
+}
+
+limitInputLength(description, MAX_LENGTH);
+
+pristine.addValidator (
+  hashtags,
+  hasValidCount,
+  textErrors.INVALID_COUNT,
+  3,
+  true
+);
+
+pristine.addValidator (
+  hashtags,
+  hasValidTags,
+  textErrors.INVALID_TAG,
+  2,
+  true
+);
+
+pristine.addValidator (
+  hashtags,
+  hasRepeatingTags,
+  textErrors.REPEATING_TAG,
+  1,
+  true
+);
