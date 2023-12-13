@@ -18,7 +18,8 @@ const PhotoGallery = (function () {
     const pictures = document.querySelectorAll('.picture');
 
     pictures.forEach((picture, index) => {
-      picture.addEventListener('click', () => {
+      picture.addEventListener('click', (evt) => {
+        evt.preventDefault();
         showBigPicture(photosData[index]);
       });
     });
@@ -26,11 +27,13 @@ const PhotoGallery = (function () {
     const closeBtn = document.querySelector('.big-picture__cancel');
     closeBtn.addEventListener('click', closeBigPicture);
 
-    document.addEventListener('keydown', (evt) => {
-      if (evt.key === 'Escape') {
-        closeBigPicture();
-      }
-    });
+    function onEscapeClick(){
+      document.addEventListener('keydown', (evt) => {
+        if (evt.key === 'Escape') {
+          closeBigPicture();
+        }
+      });
+    }
   }
 
   function renderPhotos(photosData) {
