@@ -1,3 +1,5 @@
+
+
 function showBigPicture(photoData) {
   const bigPicture = document.querySelector('.big-picture');
   const bigImage = bigPicture.querySelector('.big-picture__img img');

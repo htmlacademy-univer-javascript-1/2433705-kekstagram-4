@@ -1,3 +1,4 @@
+import { resetImageScale } from './scale.js';
 
 const form = document.querySelector('.img-upload__form');
 const uploadInput = form.querySelector('#upload-file');
@@ -44,6 +45,7 @@ uploadInput.addEventListener('change', () => {
     document.body.classList.add('modal-open');
     selectedEffect = 'none';
     applySelectedEffect();
+    resetImageScale();
   }
 });
 

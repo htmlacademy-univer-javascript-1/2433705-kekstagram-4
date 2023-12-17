@@ -54,4 +54,3 @@ const PhotoGallery = (function () {
 
 const photos = Array.from({length : 25}, (_, index) => generatePhoto(index+1));
 PhotoGallery.renderPhotos(photos);
-
