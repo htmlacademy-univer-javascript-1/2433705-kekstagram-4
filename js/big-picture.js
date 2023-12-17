@@ -1,4 +1,4 @@
-
+const DISPLAYED_COMMENTS = 5;
 
 function showBigPicture(photoData) {
   const bigPicture = document.querySelector('.big-picture');

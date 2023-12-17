@@ -27,13 +27,12 @@ const PhotoGallery = (function () {
     const closeBtn = document.querySelector('.big-picture__cancel');
     closeBtn.addEventListener('click', closeBigPicture);
 
-    function onEscapeClick(){
-      document.addEventListener('keydown', (evt) => {
-        if (evt.key === 'Escape') {
-          closeBigPicture();
-        }
-      });
-    }
+    document.addEventListener('keydown', (evt) => {
+      if (evt.key === 'Escape') {
+        closeBigPicture();
+      }
+    });
+
   }
 
   function renderPhotos(photosData) {
