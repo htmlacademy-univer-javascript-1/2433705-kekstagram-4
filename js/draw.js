@@ -27,13 +27,11 @@ const PhotoGallery = (function () {
     const closeBtn = document.querySelector('.big-picture__cancel');
     closeBtn.addEventListener('click', closeBigPicture);
 
-    function onEscapeClick(){
-      document.addEventListener('keydown', (evt) => {
-        if (evt.key === 'Escape') {
-          closeBigPicture();
-        }
-      });
-    }
+    document.addEventListener('keydown', (evt) => {
+      if (evt.key === 'Escape') {
+        closeBigPicture();
+      }
+    });
   }
 
   function renderPhotos(photosData) {
@@ -54,4 +52,3 @@ const PhotoGallery = (function () {
 
 const photos = Array.from({length : 25}, (_, index) => generatePhoto(index+1));
 PhotoGallery.renderPhotos(photos);
-

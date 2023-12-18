@@ -1,3 +1,5 @@
+import { resetImageScale } from './scale.js';
+import { resetEffects} from './effect.js';
 
 const form = document.querySelector('.img-upload__form');
 const uploadInput = form.querySelector('#upload-file');
@@ -7,11 +9,10 @@ const imgPreview = form.querySelector('.img-upload__preview img');
 const hashtags = form.querySelector('.text__hashtags');
 const description = form.querySelector('.text__description');
 let preventClose = false;
-let selectedEffect = 'none';
 const MAX_LENGTH = 140;
 const MAX_HASHTAG_COUNT = 5;
 const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
-const textErrors = {
+const TEXT_ERRORS = {
   INVALID_COUNT: `Максимум ${MAX_HASHTAG_COUNT} хештегов`,
   INVALID_TAG: 'Неправильный хештег',
   REPEATING_TAG: 'Повторяющийся хештег'
@@ -42,15 +43,9 @@ uploadInput.addEventListener('change', () => {
     imgPreview.src = URL.createObjectURL(file);
     overlay.classList.remove('hidden');
     document.body.classList.add('modal-open');
-    selectedEffect = 'none';
-    applySelectedEffect();
+    resetImageScale();
   }
 });
-
-function applySelectedEffect() {
-  imgPreview.className = '';
-  imgPreview.classList.add(`effects__preview--${selectedEffect}`);
-}
 
 function handleFocus(element) {
   element.addEventListener('focus', () => {
@@ -68,6 +63,7 @@ handleFocus(description);
 function closeImgUploadOverlay() {
   form.reset();
   pristine.reset();
+  resetEffects();
   overlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
 }
@@ -78,12 +74,6 @@ document.addEventListener('keydown', (evt) => {
   if (evt.key === 'Escape' && !preventClose){
     closeImgUploadOverlay();
   }
-});
-
-const effectsList = document.querySelector('.effects__list');
-effectsList.addEventListener('change', (evt) => {
-  selectedEffect = evt.target.value;
-  applySelectedEffect();
 });
 
 function limitInputLength(inputField, maxLen) {
@@ -102,7 +92,7 @@ limitInputLength(description, MAX_LENGTH);
 pristine.addValidator (
   hashtags,
   hasValidCount,
-  textErrors.INVALID_COUNT,
+  TEXT_ERRORS.INVALID_COUNT,
   3,
   true
 );
@@ -110,7 +100,7 @@ pristine.addValidator (
 pristine.addValidator (
   hashtags,
   hasValidTags,
-  textErrors.INVALID_TAG,
+  TEXT_ERRORS.INVALID_TAG,
   2,
   true
 );
@@ -118,7 +108,9 @@ pristine.addValidator (
 pristine.addValidator (
   hashtags,
   hasRepeatingTags,
-  textErrors.REPEATING_TAG,
+  TEXT_ERRORS.REPEATING_TAG,
   1,
   true
 );
+
+export {imgPreview};
