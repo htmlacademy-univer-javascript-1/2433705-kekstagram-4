@@ -32,7 +32,6 @@ const PhotoGallery = (function () {
         closeBigPicture();
       }
     });
-
   }
 
   function renderPhotos(photosData) {

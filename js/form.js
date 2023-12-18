@@ -1,5 +1,5 @@
 import { resetImageScale } from './scale.js';
-import { applySelectedEffect, resetSelectedEffect} from './effect.js';
+import {applySelectedEffect, resetSelectedEffect} from './effect.js';
 
 const form = document.querySelector('.img-upload__form');
 const uploadInput = form.querySelector('#upload-file');
@@ -12,7 +12,7 @@ let preventClose = false;
 const MAX_LENGTH = 140;
 const MAX_HASHTAG_COUNT = 5;
 const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
-const textErrors = {
+const TEXT_ERRORS = {
   INVALID_COUNT: `Максимум ${MAX_HASHTAG_COUNT} хештегов`,
   INVALID_TAG: 'Неправильный хештег',
   REPEATING_TAG: 'Повторяющийся хештег'
@@ -93,7 +93,7 @@ limitInputLength(description, MAX_LENGTH);
 pristine.addValidator (
   hashtags,
   hasValidCount,
-  textErrors.INVALID_COUNT,
+  TEXT_ERRORS.INVALID_COUNT,
   3,
   true
 );
@@ -101,7 +101,7 @@ pristine.addValidator (
 pristine.addValidator (
   hashtags,
   hasValidTags,
-  textErrors.INVALID_TAG,
+  TEXT_ERRORS.INVALID_TAG,
   2,
   true
 );
@@ -109,7 +109,7 @@ pristine.addValidator (
 pristine.addValidator (
   hashtags,
   hasRepeatingTags,
-  textErrors.REPEATING_TAG,
+  TEXT_ERRORS.REPEATING_TAG,
   1,
   true
 );
