@@ -1,5 +1,5 @@
 import { resetImageScale } from './scale.js';
-import {applySelectedEffect, resetSelectedEffect} from './effect.js';
+import { resetEffects} from './effect.js';
 
 const form = document.querySelector('.img-upload__form');
 const uploadInput = form.querySelector('#upload-file');
@@ -43,7 +43,6 @@ uploadInput.addEventListener('change', () => {
     imgPreview.src = URL.createObjectURL(file);
     overlay.classList.remove('hidden');
     document.body.classList.add('modal-open');
-    applySelectedEffect();
     resetImageScale();
   }
 });
@@ -64,7 +63,7 @@ handleFocus(description);
 function closeImgUploadOverlay() {
   form.reset();
   pristine.reset();
-  resetSelectedEffect();
+  resetEffects();
   overlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
 }
