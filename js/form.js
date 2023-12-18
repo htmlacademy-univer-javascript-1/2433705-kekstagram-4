@@ -1,4 +1,5 @@
 import { resetImageScale } from './scale.js';
+import { applySelectedEffect, resetSelectedEffect} from './effect.js';
 
 const form = document.querySelector('.img-upload__form');
 const uploadInput = form.querySelector('#upload-file');
@@ -8,7 +9,6 @@ const imgPreview = form.querySelector('.img-upload__preview img');
 const hashtags = form.querySelector('.text__hashtags');
 const description = form.querySelector('.text__description');
 let preventClose = false;
-let selectedEffect = 'none';
 const MAX_LENGTH = 140;
 const MAX_HASHTAG_COUNT = 5;
 const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
@@ -43,16 +43,10 @@ uploadInput.addEventListener('change', () => {
     imgPreview.src = URL.createObjectURL(file);
     overlay.classList.remove('hidden');
     document.body.classList.add('modal-open');
-    selectedEffect = 'none';
     applySelectedEffect();
     resetImageScale();
   }
 });
-
-function applySelectedEffect() {
-  imgPreview.className = '';
-  imgPreview.classList.add(`effects__preview--${selectedEffect}`);
-}
 
 function handleFocus(element) {
   element.addEventListener('focus', () => {
@@ -70,6 +64,7 @@ handleFocus(description);
 function closeImgUploadOverlay() {
   form.reset();
   pristine.reset();
+  resetSelectedEffect();
   overlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
 }
@@ -80,12 +75,6 @@ document.addEventListener('keydown', (evt) => {
   if (evt.key === 'Escape' && !preventClose){
     closeImgUploadOverlay();
   }
-});
-
-const effectsList = document.querySelector('.effects__list');
-effectsList.addEventListener('change', (evt) => {
-  selectedEffect = evt.target.value;
-  applySelectedEffect();
 });
 
 function limitInputLength(inputField, maxLen) {
@@ -124,3 +113,5 @@ pristine.addValidator (
   1,
   true
 );
+
+export {imgPreview};
