@@ -1,5 +1,6 @@
 import { resetImageScale } from './scale.js';
 import { resetEffects} from './effect.js';
+import { sendData } from './api.js';
 
 const form = document.querySelector('.img-upload__form');
 const uploadInput = form.querySelector('#upload-file');
@@ -8,6 +9,7 @@ const cancelBtn = form.querySelector('#upload-cancel');
 const imgPreview = form.querySelector('.img-upload__preview img');
 const hashtags = form.querySelector('.text__hashtags');
 const description = form.querySelector('.text__description');
+const submitButton = document.querySelector('#upload-submit');
 let preventClose = false;
 const MAX_LENGTH = 140;
 const MAX_HASHTAG_COUNT = 5;
@@ -112,5 +114,76 @@ pristine.addValidator (
   1,
   true
 );
+
+function showSuccessMessage() {
+  const successTemplate = document.querySelector('#success').content.cloneNode(true);
+  const successElement = successTemplate.querySelector('.success');
+
+  document.body.appendChild(successElement);
+
+  const successButton = successElement.querySelector('.success__button');
+
+  function closeSuccessMessage() {
+    document.body.removeChild(successElement);
+  }
+
+  successButton.addEventListener('click', closeSuccessMessage);
+
+  document.addEventListener('keydown', (evt) => {
+    if (evt.key === 'Escape') {
+      closeSuccessMessage();
+    }
+  });
+
+  document.addEventListener('click', (evt) => {
+    if (!successElement.contains(evt.target)) {
+      closeSuccessMessage();
+    }
+  });
+}
+
+function showErrorMessage() {
+  const errorTemplate = document.querySelector('#error');
+  const errorElement = errorTemplate.content.cloneNode(true).querySelector('.error');
+
+  document.body.appendChild(errorElement);
+
+  const errorButton = errorElement.querySelector('.error__button');
+
+  function closeErrorMessage() {
+    document.body.removeChild(errorElement);
+  }
+
+  errorButton.addEventListener('click', closeErrorMessage);
+
+  document.addEventListener('keydown', (evt) => {
+    if (evt.key === 'Escape') {
+      closeErrorMessage();
+    }
+  });
+
+  document.addEventListener('click', (evt) => {
+    if (!errorElement.contains(evt.target)) {
+      closeErrorMessage();
+    }
+  });
+}
+
+form.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  submitButton.disabled = true;
+  const formData = new FormData(form);
+
+  sendData(formData)
+    .then(() => {
+      submitButton.disabled = true;
+      showSuccessMessage();
+      closeImgUploadOverlay();
+    })
+    .catch(() => {
+      submitButton.disabled = true;
+      showErrorMessage();
+    });
+});
 
 export {imgPreview};
