@@ -1,4 +1,4 @@
-import { generatePhoto } from './data.js';
+import { getData } from './api.js';
 import { showBigPicture, closeBigPicture } from './big-picture.js';
 
 const PhotoGallery = (function () {
@@ -14,6 +14,7 @@ const PhotoGallery = (function () {
     comments.textContent = photoData.comments.length;
     return photoElement;
   }
+
   function addEventListeners(photosData) {
     const pictures = document.querySelectorAll('.picture');
 
@@ -34,21 +35,26 @@ const PhotoGallery = (function () {
     });
   }
 
-  function renderPhotos(photosData) {
-    const fragment = document.createDocumentFragment();
-    const picturesContainer = document.querySelector('.pictures');
-    photosData.forEach((photo) => {
-      const photoElement = createPhotoElement(photo);
-      fragment.appendChild(photoElement);
-    });
-    picturesContainer.appendChild(fragment);
-    addEventListeners(photosData);
-  }
-  return{
-    renderPhotos
-  };
+  function renderPhotosFromServer() {
+    getData()
+      .then((photos) => {
+        const fragment = document.createDocumentFragment();
+        const picturesContainer = document.querySelector('.pictures');
 
+        photos.forEach((photo) => {
+          const photoElement = createPhotoElement(photo);
+          fragment.appendChild(photoElement);
+        });
+
+        picturesContainer.appendChild(fragment);
+        addEventListeners(photos);
+      });
+  }
+
+
+  return {
+    renderPhotosFromServer
+  };
 })();
 
-const photos = Array.from({length : 25}, (_, index) => generatePhoto(index+1));
-PhotoGallery.renderPhotos(photos);
+PhotoGallery.renderPhotosFromServer();
