@@ -2,6 +2,14 @@ import { resetImageScale } from './scale.js';
 import { resetEffects} from './effect.js';
 import { sendData } from './api.js';
 
+const MAX_LENGTH = 140;
+const MAX_HASHTAG_COUNT = 5;
+const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
+const TEXT_ERRORS = {
+  INVALID_COUNT: `Максимум ${MAX_HASHTAG_COUNT} хештегов`,
+  INVALID_TAG: 'Неправильный хештег',
+  REPEATING_TAG: 'Повторяющийся хештег'
+};
 const form = document.querySelector('.img-upload__form');
 const uploadInput = form.querySelector('#upload-file');
 const overlay = form.querySelector('.img-upload__overlay');
@@ -11,14 +19,7 @@ const hashtags = form.querySelector('.text__hashtags');
 const description = form.querySelector('.text__description');
 const submitButton = document.querySelector('#upload-submit');
 let preventClose = false;
-const MAX_LENGTH = 140;
-const MAX_HASHTAG_COUNT = 5;
-const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
-const TEXT_ERRORS = {
-  INVALID_COUNT: `Максимум ${MAX_HASHTAG_COUNT} хештегов`,
-  INVALID_TAG: 'Неправильный хештег',
-  REPEATING_TAG: 'Повторяющийся хештег'
-};
+
 const pristine = new Pristine(form,{
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
@@ -66,6 +67,7 @@ function closeImgUploadOverlay() {
   form.reset();
   pristine.reset();
   resetEffects();
+  submitButton.disabled = false;
   overlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
 }
