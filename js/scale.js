@@ -1,12 +1,11 @@
-const scaleControlValue = document.querySelector('.scale__control--value');
-const imgUploadPreview = document.querySelector('.img-upload__preview img');
-const upScale = document.querySelector('.scale__control--bigger');
-const downScale = document.querySelector('.scale__control--smaller');
-
 const MIN_SCALE = 25;
 const MAX_SCALE = 100;
 const SCALE_STEP = 25;
 const DEFAULT_SCALE = 100;
+const scaleControlValue = document.querySelector('.scale__control--value');
+const imgUploadPreview = document.querySelector('.img-upload__preview img');
+const upScale = document.querySelector('.scale__control--bigger');
+const downScale = document.querySelector('.scale__control--smaller');
 
 function changeImageScale(step) {
   let currentScale = parseInt(scaleControlValue.value, 10);
